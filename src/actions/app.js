@@ -8,6 +8,7 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
 
+export const ADD_BOX = 'ADD_BOX';
 export const UPDATE_PAGE = 'UPDATE_PAGE';
 export const UPDATE_OFFLINE = 'UPDATE_OFFLINE';
 export const UPDATE_DRAWER_STATE = 'UPDATE_DRAWER_STATE';
@@ -27,7 +28,7 @@ export const navigate = (path) => (dispatch) => {
 };
 
 const loadPage = (page) => (dispatch) => {
-  switch(page) {
+  switch (page) {
     case 'view1':
       import('../components/my-view1.js').then((module) => {
         // Put code in here that you want to run every time when
@@ -90,4 +91,11 @@ export const updateDrawerState = (opened) => (dispatch, getState) => {
       opened
     });
   }
+};
+
+export const addBox = (box) => (dispatch, getState) => {
+  dispatch({
+    type: ADD_BOX,
+    box: box
+  });
 };
