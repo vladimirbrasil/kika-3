@@ -21,7 +21,6 @@ import { store } from '../store.js';
 
 // These are the actions needed by this element.
 import {
-  addBox,
   navigate,
   updateOffline,
   updateDrawerState,
@@ -230,11 +229,6 @@ class MyApp extends connect(store)(LitElement) {
       _drawerOpened: Boolean,
       _snackbarOpened: Boolean,
       _offline: Boolean,
-      _boxes: Array,
-      _sections: {
-        type: Array,
-        computed: '_computeSections(_boxes)',
-      },
     }
   }
 
@@ -264,23 +258,10 @@ class MyApp extends connect(store)(LitElement) {
   }
 
   _stateChanged(state) {
-    this._boxes = state.app.boxes;
-    console.log(this._boxes);
     this._page = state.app.page;
     this._offline = state.app.offline;
     this._snackbarOpened = state.app.snackbarOpened;
     this._drawerOpened = state.app.drawerOpened;
-  }
-
-  // detectIsLastBox(index) {
-  //   // http://stackoverflow.com/questions/32364695/polymer-determine-the-last-item-on-dom-repeat-items
-  //   if (this.boxes.length - 1 === index) { return true; }
-  //   else { return false; }
-  // }
-
-  // Get sections from boxes 
-  _computeSections(_boxes) {
-    return _boxes.map(box => box.menu).filter(x => x);
   }
 }
 
