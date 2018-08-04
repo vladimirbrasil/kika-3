@@ -21,6 +21,7 @@ import { store } from '../store.js';
 
 // These are the actions needed by this element.
 import {
+  addBox,
   navigate,
   updateOffline,
   updateDrawerState,
@@ -36,7 +37,7 @@ import { menuIcon } from './my-icons.js';
 import './snack-bar.js';
 
 class MyApp extends connect(store)(LitElement) {
-  _render({appTitle, _page, _drawerOpened, _snackbarOpened, _offline}) {
+  _render({ appTitle, _page, _drawerOpened, _snackbarOpened, _offline }) {
     // Anything that's related to rendering should be done in here.
     return html`
     <style>
@@ -228,7 +229,12 @@ class MyApp extends connect(store)(LitElement) {
       _page: String,
       _drawerOpened: Boolean,
       _snackbarOpened: Boolean,
-      _offline: Boolean
+      _offline: Boolean,
+      _boxes: Array,
+      _sections: {
+        type: Array,
+        computed: '_computeSections(_boxes)',
+      },
     }
   }
 
@@ -243,26 +249,40 @@ class MyApp extends connect(store)(LitElement) {
     installRouter((location) => store.dispatch(navigate(window.decodeURIComponent(location.pathname))));
     installOfflineWatcher((offline) => store.dispatch(updateOffline(offline)));
     installMediaQueryWatcher(`(min-width: 460px)`,
-        (matches) => store.dispatch(updateLayout(matches)));
+      (matches) => store.dispatch(updateLayout(matches)));
   }
 
   _didRender(properties, changeList) {
     if ('_page' in changeList) {
       const pageTitle = properties.appTitle + ' - ' + changeList._page;
       updateMetadata({
-          title: pageTitle,
-          description: pageTitle
-          // This object also takes an image property, that points to an img src.
+        title: pageTitle,
+        description: pageTitle
+        // This object also takes an image property, that points to an img src.
       });
     }
   }
 
   _stateChanged(state) {
+    this._boxes = state.app.boxes;
+    console.log(this._boxes);
     this._page = state.app.page;
     this._offline = state.app.offline;
     this._snackbarOpened = state.app.snackbarOpened;
     this._drawerOpened = state.app.drawerOpened;
   }
+
+  // detectIsLastBox(index) {
+  //   // http://stackoverflow.com/questions/32364695/polymer-determine-the-last-item-on-dom-repeat-items
+  //   if (this.boxes.length - 1 === index) { return true; }
+  //   else { return false; }
+  // }
+
+  // Get sections from boxes 
+  _computeSections(_boxes) {
+    return _boxes.map(box => box.menu).filter(x => x);
+  }
 }
+
 
 window.customElements.define('my-app', MyApp);
