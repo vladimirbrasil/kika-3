@@ -7,8 +7,8 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
+import { fetchBioIfNeeded } from './bio.js';
 
-export const ADD_BOX = 'ADD_BOX';
 export const UPDATE_PAGE = 'UPDATE_PAGE';
 export const UPDATE_OFFLINE = 'UPDATE_OFFLINE';
 export const UPDATE_DRAWER_STATE = 'UPDATE_DRAWER_STATE';
@@ -28,25 +28,29 @@ export const navigate = (path) => (dispatch) => {
 };
 
 const loadPage = (page) => (dispatch) => {
-  switch (page) {
-    case 'view1':
-      import('../components/my-view1.js').then((module) => {
-        // Put code in here that you want to run every time when
-        // navigating to view1 after my-view1.js is loaded.
-      });
-      break;
-    case 'view2':
-      import('../components/my-view2.js');
-      break;
-    case 'view3':
-      import('../components/my-view3.js');
-      break;
-    default:
-      page = 'view404';
-      import('../components/my-view404.js');
-  }
+  // dispatch(fetchBioIfNeeded());
+  dispatch(fetchBioIfNeeded()).then(() => {
+    switch (page) {
+      case 'view1':
+        import('../components/my-view1.js').then((module) => {
+          // Put code in here that you want to run every time when
+          // navigating to view1 after my-view1.js is loaded.
+        });
+        break;
+      case 'view2':
+        import('../components/my-view2.js');
+        break;
+      case 'view3':
+        import('../components/my-view3.js');
+        break;
+      default:
+        page = 'view404';
+        import('../components/my-view404.js');
+    }
 
-  dispatch(updatePage(page));
+    dispatch(updatePage(page));
+
+  });
 };
 
 const updatePage = (page) => {
@@ -93,9 +97,3 @@ export const updateDrawerState = (opened) => (dispatch, getState) => {
   }
 };
 
-export const addBox = (box) => (dispatch, getState) => {
-  dispatch({
-    type: ADD_BOX,
-    box: box
-  });
-};
