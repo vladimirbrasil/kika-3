@@ -20,13 +20,23 @@ import {
   addBox,
 } from '../actions/app.js';
 
+import './my-box.js';
+
 // These are the shared styles needed by this element.
 import { SharedStyles } from './shared-styles.js';
+
+import { } from '@polymer/polymer/lib/elements/dom-repeat.js';
 
 class MyView1 extends connect(store)(PageViewElement) {
   _render(props) {
     return html`
        ${SharedStyles}
+      <dom-repeat items=${this._boxes}>
+        <template>
+          <my-box box="[[item]]"></my-box>
+        </template>
+      </dom-repeat>
+      
       <section>
         <h2>Static page</h2>
         <p>This is a text-only page.</p>
@@ -47,7 +57,7 @@ class MyView1 extends connect(store)(PageViewElement) {
           vulputate facilisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam feugiat metus ex, vel fringilla
           massa tincidunt sit amet. Nunc facilisis bibendum tristique. Mauris commodo, dolor vitae dapibus fermentum, odio nibh
           viverra lorem, eu cursus diam turpis et sapien. Nunc suscipit tortor a ligula tincidunt, id hendrerit tellus sollicitudin.</p>
-      </section>
+      </section>n>
     `;
   }
 
@@ -64,6 +74,10 @@ class MyView1 extends connect(store)(PageViewElement) {
   _stateChanged(state) {
     this._boxes = state.app.boxes;
     console.log(this._boxes);
+  }
+
+  _jsonStringify(s) {
+    return JSON.stringify(s);
   }
 
   // detectIsLastBox(index) {
